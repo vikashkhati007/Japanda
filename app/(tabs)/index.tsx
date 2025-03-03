@@ -4,62 +4,90 @@ import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { Button, SearchBar } from '@rneui/themed';
+import React from 'react';
+
 
 export default function HomeScreen() {
+  const [search, setSearch] = React.useState('');
+  const [result, setResult] = React.useState<any>(null);
+  const [notFound, setNotFound] = React.useState(false);
+
+  const updateSearch = (search:any) => {
+    setSearch(search);
+  };
+  const onSubmit = async () =>{
+    setNotFound(false);
+    const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${search}`);
+    const data = await response.json();
+    if (data.title === "No Definitions Found") {
+      setNotFound(true);
+      setResult(null);
+    }
+    else{
+          setResult(data);
+    }
+
+    console.log(result)
+  }
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
       headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
+        <ThemedText>Welcome to Japanese Learning <HelloWave/></ThemedText>
       }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
+      <ThemedView style={styles.view}>
+      <SearchBar
+      placeholder="Type Here..."
+      onChangeText={updateSearch}
+      value={search}
+      platform='android'
+      containerStyle={styles.searchContainer}
+      inputContainerStyle={styles.searchInputContainer}
+      inputStyle={styles.searchInput}
+      searchIcon={{ size: 24 }}
+    />
+    <Button title="Search" onPress={onSubmit}
+    style={styles.searchInputContainer}
+    />
+    <ThemedText>Results</ThemedText>
+    {notFound ? (
+        <ThemedText>Result Not Found</ThemedText>
+      ) : (result && result.map((item: any, index: number) => (
+      <ThemedView key={index}>
+        <ThemedText>Word: {item.word}</ThemedText>
+        {item.meanings.map((meaning: any, meaningIndex: number) => (
+          <ThemedView key={meaningIndex}>
+            <ThemedText>
+              {meaning.partOfSpeech}: {meaning.definitions[0].definition}
+            </ThemedText>
+          </ThemedView>
+        ))}
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
+    )))}
       </ThemedView>
     </ParallaxScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  view: {
+    margin: 10,
   },
+  searchContainer: {
+    backgroundColor: 'transparent',
+    borderBottomColor: 'transparent',
+    borderTopColor: 'transparent',
+  },
+  searchInputContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+  },
+  searchInput: {
+    color: '#000',
+    paddingHorizontal: 2,
+  }
+,
   stepContainer: {
     gap: 8,
     marginBottom: 8,
@@ -71,4 +99,5 @@ const styles = StyleSheet.create({
     left: 0,
     position: 'absolute',
   },
+ 
 });

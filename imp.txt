@@ -1,0 +1,4 @@
+document.getElementsByClassName("popup-content")[0].style.display="none";
+document.querySelectorAll('.power_stickybanner__wrapper.adsbyvli').forEach(el => el.remove());
+document.getElementById("side-menu-content").style.display="none"; 
+document.getElementById("side-menu-control-btns").style.display="none";

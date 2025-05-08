@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "learnjapan",
+    "name": "Japanda",
     "slug": "learnjapan",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -37,7 +37,10 @@
       "expo-font"
     ],
     "updates": {
-      "enabled": false
+      "url": "https://u.expo.dev/d8f4d17c-4dad-497e-a266-10412277d177",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
     },
     "experiments": {
       "typedRoutes": true
@@ -50,6 +53,9 @@
         "projectId": "d8f4d17c-4dad-497e-a266-10412277d177"
       }
     },
-    "owner": "vikashkhati007"
+    "owner": "vikashkhati007",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
   }
 }
